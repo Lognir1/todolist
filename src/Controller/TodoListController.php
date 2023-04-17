@@ -44,6 +44,7 @@ class TodoListController extends AbstractController
     {
         return $this->render('todo_list/show.html.twig', [
             'todo_list' => $todoList,
+            'tasks' => $todoList->getTasksList()
         ]);
     }
 

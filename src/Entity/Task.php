@@ -13,9 +13,6 @@ class Task
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $task_id = null;
-
     #[ORM\Column(length: 255)]
     private ?string $description = null;
 
@@ -23,24 +20,12 @@ class Task
     private ?string $status = null;
 
     #[ORM\ManyToOne(inversedBy: 'tasks_list')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?TodoList $todoList = null;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getTaskId(): ?int
-    {
-        return $this->task_id;
-    }
-
-    public function setTaskId(int $task_id): self
-    {
-        $this->task_id = $task_id;
-
-        return $this;
     }
 
     public function getDescription(): ?string

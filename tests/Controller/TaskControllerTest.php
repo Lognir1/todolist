@@ -2,21 +2,21 @@
 
 namespace App\Test\Controller;
 
-use App\Entity\TodoList;
-use App\Repository\TodoListRepository;
+use App\Entity\Task;
+use App\Repository\TaskRepository;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class TodoListControllerTest extends WebTestCase
+class TaskControllerTest extends WebTestCase
 {
     private KernelBrowser $client;
-    private TodoListRepository $repository;
-    private string $path = '/todo/list/';
+    private TaskRepository $repository;
+    private string $path = '/task/';
 
     protected function setUp(): void
     {
         $this->client = static::createClient();
-        $this->repository = static::getContainer()->get('doctrine')->getRepository(TodoList::class);
+        $this->repository = static::getContainer()->get('doctrine')->getRepository(Task::class);
 
         foreach ($this->repository->findAll() as $object) {
             $this->repository->remove($object, true);
@@ -28,7 +28,7 @@ class TodoListControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', $this->path);
 
         self::assertResponseStatusCodeSame(200);
-        self::assertPageTitleContains('TodoList index');
+        self::assertPageTitleContains('Task index');
 
         // Use the $crawler to perform additional assertions e.g.
         // self::assertSame('Some text on the page', $crawler->filter('.p')->first());
@@ -44,10 +44,12 @@ class TodoListControllerTest extends WebTestCase
         self::assertResponseStatusCodeSame(200);
 
         $this->client->submitForm('Save', [
-            'todo_list[description]' => 'Testing',
+            'task[description]' => 'Testing',
+            'task[status]' => 'Testing',
+            'task[todoList]' => 'Testing',
         ]);
 
-        self::assertResponseRedirects('/todo/list/');
+        self::assertResponseRedirects('/task/');
 
         self::assertSame($originalNumObjectsInRepository + 1, count($this->repository->findAll()));
     }
@@ -55,15 +57,17 @@ class TodoListControllerTest extends WebTestCase
     public function testShow(): void
     {
         $this->markTestIncomplete();
-        $fixture = new TodoList();
+        $fixture = new Task();
         $fixture->setDescription('My Title');
+        $fixture->setStatus('My Title');
+        $fixture->setTodoList('My Title');
 
         $this->repository->save($fixture, true);
 
         $this->client->request('GET', sprintf('%s%s', $this->path, $fixture->getId()));
 
         self::assertResponseStatusCodeSame(200);
-        self::assertPageTitleContains('TodoList');
+        self::assertPageTitleContains('Task');
 
         // Use assertions to check that the properties are properly displayed.
     }
@@ -71,21 +75,28 @@ class TodoListControllerTest extends WebTestCase
     public function testEdit(): void
     {
         $this->markTestIncomplete();
-        $fixture = new TodoList();
+        $fixture = new Task();
         $fixture->setDescription('My Title');
+        $fixture->setStatus('My Title');
+        $fixture->setTodoList('My Title');
 
         $this->repository->save($fixture, true);
 
         $this->client->request('GET', sprintf('%s%s/edit', $this->path, $fixture->getId()));
 
         $this->client->submitForm('Update', [
-            'todo_list[description]' => 'Something New',
+            'task[description]' => 'Something New',
+            'task[status]' => 'Something New',
+            'task[todoList]' => 'Something New',
         ]);
 
-        self::assertResponseRedirects('/todo/list/');
+        self::assertResponseRedirects('/task/');
 
         $fixture = $this->repository->findAll();
+
         self::assertSame('Something New', $fixture[0]->getDescription());
+        self::assertSame('Something New', $fixture[0]->getStatus());
+        self::assertSame('Something New', $fixture[0]->getTodoList());
     }
 
     public function testRemove(): void
@@ -94,8 +105,10 @@ class TodoListControllerTest extends WebTestCase
 
         $originalNumObjectsInRepository = count($this->repository->findAll());
 
-        $fixture = new TodoList();
+        $fixture = new Task();
         $fixture->setDescription('My Title');
+        $fixture->setStatus('My Title');
+        $fixture->setTodoList('My Title');
 
         $this->repository->save($fixture, true);
 
@@ -105,6 +118,6 @@ class TodoListControllerTest extends WebTestCase
         $this->client->submitForm('Delete');
 
         self::assertSame($originalNumObjectsInRepository, count($this->repository->findAll()));
-        self::assertResponseRedirects('/todo/list/');
+        self::assertResponseRedirects('/task/');
     }
 }

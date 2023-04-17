@@ -9,7 +9,7 @@
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Todolist_id</th>
+                <th>Nom</th>
                 <th>Description</th>
                 <th>actions</th>
             </tr>
@@ -18,7 +18,7 @@
         {% for todo_list in todo_lists %}
             <tr>
                 <td>{{ todo_list.id }}</td>
-                <td>{{ todo_list.todolistId }}</td>
+                <td>{{ todo_list.name }}</td>
                 <td>{{ todo_list.description }}</td>
                 <td>
                     <a href="{{ path('app_todo_list_show', {'id': todo_list.id}) }}">show</a>

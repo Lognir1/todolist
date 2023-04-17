@@ -2,25 +2,25 @@
 
 namespace App\Form;
 
-use App\Entity\TodoList;
+use App\Entity\Task;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class TodoListType extends AbstractType
+class TaskType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
             ->add('description')
+            ->add('status')
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => TodoList::class,
+            'data_class' => Task::class,
         ]);
     }
 }

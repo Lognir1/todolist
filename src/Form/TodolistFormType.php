@@ -12,7 +12,6 @@ class TodolistFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('todolist_id')
             ->add('description')
         ;
     }
